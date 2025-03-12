@@ -17,6 +17,11 @@ calendar test for alumni club site
 - making this repo private because i accidentally uploaded keys and even though i've tried to totally remove them somehow apparently they're still out there and i'm getting bombarded by emails lol 
 - well i guess i have to rotate the keys anyways so i'll keep it public but with new key. will be interesting to see if i keep getting the warning emails. how do i remove the keys from my history? it seems like a common mistake to forget to add it to the gitignore 
 
+
+- also added restriction restricting it to the google cal api 
+![alt text](<img/CleanShot 2025-03-11 at 20.51.09@2x.png>)
+
+
 # Notes
 
 first pass looks like this 
