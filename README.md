@@ -15,6 +15,7 @@ calendar test for alumni club site
 ![](img/bayareajacketscalendardrama.gif)
 
 - making this repo private because i accidentally uploaded keys and even though i've tried to totally remove them somehow apparently they're still out there and i'm getting bombarded by emails lol 
+- well i guess i have to rotate the keys anyways so i'll keep it public but with new key. will be interesting to see if i keep getting the warning emails. how do i remove the keys from my history? it seems like a common mistake to forget to add it to the gitignore 
 
 # Notes
 
