@@ -1,38 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni Events</title>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css' rel='stylesheet' />
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/locales-all.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.global.min.js'></script>
+    <title>Alumni Events Calendar</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
-        #calendar { max-width: 900px; margin: auto; }
-        .subscribe { margin-top: 10px; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 10px;
+        }
+
+        .event {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .event h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .event p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .subscribe {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
+
 <body>
-    <h2>Upcoming Alumni Events</h2>
-    <div id='calendar'></div>
-    <div class="subscribe">
-        <p><strong>Subscribe:</strong></p>
-        <a href="YOUR_ICAL_LINK_HERE" target="_blank">📅 Add to Your Calendar</a>
-    </div>
+    <h2>Upcoming Events</h2>
+    <div id="events"></div>
+    <a id="subscribe" class="subscribe" target="_blank">+ Subscribe to Calendar</a>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'listWeek',
-                googleCalendarApiKey: 'YOUR_GOOGLE_API_KEY',
-                events: {
-                    googleCalendarId: 'YOUR_CALENDAR_ID@group.calendar.google.com'
-                }
+        async function loadConfig() {
+            const response = await fetch('config.json');
+            const config = await response.json();
+            return config;
+        }
+
+        async function fetchEvents() {
+            const config = await loadConfig();
+            const API_KEY = config.GOOGLE_API_KEY;
+            const CALENDAR_ID = config.GOOGLE_CALENDAR_ID;
+            document.getElementById("subscribe").href = `https://calendar.google.com/calendar/u/0/r?cid=${CALENDAR_ID}`;
+
+            const url = `https://www.googleapis.com/calendar/v3/calendars/${CALENDAR_ID}/events?key=${API_KEY}&singleEvents=true&orderBy=startTime&timeMin=${new Date().toISOString()}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            renderEvents(data.items);
+        }
+
+        function renderEvents(events) {
+            const eventsDiv = document.getElementById("events");
+            eventsDiv.innerHTML = "";
+            if (!events || events.length === 0) {
+                eventsDiv.innerHTML = "<p>No upcoming events.</p>";
+                return;
+            }
+            events.forEach(event => {
+                const start = new Date(event.start.dateTime || event.start.date).toLocaleString();
+                eventsDiv.innerHTML += `
+                    <div class="event">
+                        <h3>${event.summary}</h3>
+                        <p>${start}</p>
+                        <p>${event.location || "Location TBD"}</p>
+                    </div>
+                `;
             });
-            calendar.render();
-        });
+        }
+
+        fetchEvents();
     </script>
 </body>
+
 </html>
