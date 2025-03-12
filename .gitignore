@@ -1,3 +1,4 @@
 .env
 loadenv.sh
 config.json
+.DS_Store
